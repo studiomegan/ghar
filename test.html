@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="copyright">
+        <title>Snap</title>
+        <script src="dist/snap.svg-min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <style type="text/css">
+			body, html {
+				padding:0;
+				margin:0;
+				height: 100%;
+				width: 100%;
+			}
+        	svg {
+    			display: block;
+  			}
+  			svg text {
+				font-weight: 900; font-size: 90px; fill: blue;
+			}
+        </style>
+        <script src="rotodrag.js"></script>
+        <script>
+			window.onload = function () {
+				var s = Snap('100%', '100%');
+				var h = s.text(0, 100, 'H');
+				var o = s.text(0, 450, 'O');
+				var p = s.text(200, 350, 'P');
+				var e = s.text(10, 200, 'E');
+
+				var move = function(dx,dy) {
+				        this.attr({
+				                    transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
+				                });
+				}
+
+				var start = function() {
+				        this.data('origTransform', this.transform().local );
+				}
+				var stop = function() {
+				        console.log('finished dragging');
+				}
+
+				h.drag(move, start, stop );
+				o.drag(move, start, stop);
+				p.drag(move, start, stop);
+				e.drag(move, start, stop);
+			}
+        </script>
+        <head></head>
+        <body>
+        	<div id="svg" preserveAspectRatio="xMinYMin meet"></div>
+        	<!--<div id="snapcontainer">
+				<svg id="Layer_1" width="312px" height="300px" viewBox="0 0 260 250">
+					<text id="letterh" x="0" y="66" fill="red" data-dragstyle="slippery">H</text>
+					<text id="lettero" x="100" y="66" fill="red">O</text>
+				</svg>
+			</div>
+			
+			<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114.62 146.67">
+				<title>e</title>
+				<path d="M662.91,352.67l10.18,22.54L698,364l11,24.41-24.92,11.26,9.27,20.5,34.91-15.77,11.56,25.59-61,27.57-53.6-118.64,62-28,11.56,25.59Z" transform="translate(-625.25 -310.84)"/>
+			</svg>-->
+        </body>
