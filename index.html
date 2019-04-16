@@ -18,7 +18,7 @@
 				margin:0;
 				height: 100%;
 				width: 100%;
-				background-color: black;
+				
 			}
         	svg {
     			display: block;
@@ -122,7 +122,7 @@
 				    var rect = letters[i];
 
 				    // Add freeTransform
-					var ft = paper.freeTransform(rect, { snap: { rotate: 1 }, size: 8, draw: 'circle'  });
+					var ft = paper.freeTransform(rect, { snap: { rotate: 1 }, size: 8, draw: 'bbox'  });
 
 					// Hide freeTransform handles
 					ft.hideHandles();
