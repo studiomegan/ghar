@@ -5,11 +5,11 @@
         <meta name="copyright">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320 VOORKOM ZOOM OP MOBILE-->
         <title>Snap</title>
-        <script src="snap.svg-min.js"></script>
+        <script src="dist/snap.svg-min.js"></script>
         <script src="hammer.js"></script>
-        <!--<script src="snap.svg.free_transform.js"></script>-->
-        <script src="https://alias.io/raphael/free_transform/raphael.js"></script>
-		<script src="https://alias.io/raphael/free_transform/raphael.free_transform/raphael.free_transform.js"></script>
+        <script src="snap.svg.free_transform.js"></script>
+        <!--<script src="https://alias.io/raphael/free_transform/raphael.js"></script>
+		<script src="https://alias.io/raphael/free_transform/raphael.free_transform/raphael.free_transform.js"></script>-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <style type="text/css">
         	@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
@@ -42,8 +42,8 @@
 			}
         </style>
         <script>
-			window.onload = function () {
-				/*var s = Snap('100%', '100%');
+			/*window.onload = function () {
+				var s = Snap('100%', '100%');
 				var h = s.text(0, 200, 'H');
 				var o = s.text(0, 450, 'O');
 				var p = s.text(200, 350, 'P');
@@ -69,7 +69,7 @@
 					p.drag(move, start, stop).addClass('square');
 					e.drag(move, start, stop).addClass('square');
 				}
-				dragObj();*/
+				dragObj();
 				
 				function changeColor(){
 					// Get a reference to an element
@@ -131,45 +131,57 @@
 					var stop = function() {};
 
 					h.dblclick( addHandleFunc );
-				}
+				}*/
 
+			window.onload = function () {
 				// FREE TRANSFORM
-				/*var s = Snap('100%', '100%');
-				var h = s.text(0, 200, 'H');
-				var o = s.text(0, 450, 'O');
-				var p = s.text(200, 350, 'P');
-				var e = s.text(10, 600, 'E');*/
+				var paper = Snap('#main-container');
+				var h = paper.text(100, 200, 'H').transform( 'r20 20 S1 5');
+	            var o = paper.text(600, 450, 'O').transform( 'r45,100 S8 2');
+				var p = paper.text(200, 350, 'P').transform( 'r10,100 S-3 4');
+				var e = paper.text(400, 600, 'E').transform( 'r100,100 S1 -5');
 
-	            //var paper = Snap('#main-container');
-	            var paper = Raphael('holder');
+				var letters = [h, o, p, e];
+
+				for (i = 0; i < letters.length; i++) {
+					var object = letters[i];
+		            var ft = paper.freeTransform(object, { snap: { rotate: 1 }, size: 2, draw: 'bbox', attrs: { fill: hex, stroke: hex }  });
+		          
+		            //ft.attrs.rotate = 45;
+		            ft.attrs.scale.x = 1;
+
+					// Hide freeTransform handles
+					ft.hideHandles();
+
+					// Show hidden freeTransform handles
+					ft.showHandles();
+
+		            ft.apply();
+		            }
+
+		            object.data('ftStatus', 1);
+				    
+				    object.dblclick( function() {
+			                if( object.data('ftStatus' ) ) {
+			                    ft.hideHandles();
+			                    object.data('ftStatus',0);
+			                } else {
+			                    ft.showHandles();
+			                    object.data('ftStatus',1);
+			                }
+			        });
+					
+			}
+
+				//var paper = Snap('#main-container');
+	           /*var paper = Raphael('holder');
 	            var h = paper.text(100, 200, 'H').transform( 'r20 20 S1 5');
 	            var o = paper.text(600, 450, 'O').transform( 'r45,100 S8 2');
 				var p = paper.text(200, 350, 'P').transform( 'r10,100 S-3 4');
 				var e = paper.text(400, 600, 'E').transform( 'r100,100 S1 -5');
-				var letters = [h, o, p, e];
-
-
-
-				/*var i;
-				for (i = 0; i < letters.length; i++) {
-					var object = letters[i];
-		            var ft = paper.freeTransform(object, { snap: { rotate: 1 }, size: 8, draw: 'bbox'  });
-		          
-		            ft.attrs.rotate = 45;
-		            ft.attrs.scale.x = 1;
-		            ft.apply();
-		            object.data('ftStatus', 1);
-			    	object.dblclick( function() {
-		                if( object.data('ftStatus' ) ) {
-		                    ft.hideHandles();
-		                    object.data('ftStatus',0);
-		                } else {
-		                    ft.showHandles();
-		                    object.data('ftStatus',1);
-		                }
-		            });
-			    }*/
 				
+				// RAPHAEL FREE TRANSFORM
+				/*
 				var i;
 				for (i = 0; i < letters.length; i++) {
 				    var rect = letters[i];
@@ -211,11 +223,12 @@
 					ft.setOpts({ keepRatio: false });
 
 			}		
-		}
+		}*/
 
         </script>
         <head></head>
         <body>
+        	<svg id="main-container"></svg>
         	<!--<div id="svg" preserveAspectRatio="xMinYMin meet"></div>-->
-        	<div id="holder"></div>
+        	<!--<div id="holder"></div>-->
         </body>
