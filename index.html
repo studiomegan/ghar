@@ -3,10 +3,11 @@
     <head>
         <meta charset="utf-8">
         <meta name="copyright">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320 VOORKOM ZOOM OP MOBILE-->
         <title>Snap</title>
         <script src="snap.svg-min.js"></script>
         <script src="hammer.js"></script>
+        <!--<script src="snap.svg.free_transform.js"></script>-->
         <script src="https://alias.io/raphael/free_transform/raphael.js"></script>
 		<script src="https://alias.io/raphael/free_transform/raphael.free_transform/raphael.free_transform.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -18,7 +19,6 @@
 				margin:0;
 				height: 100%;
 				width: 100%;
-				
 			}
         	svg {
     			display: block;
@@ -41,10 +41,35 @@
 				fill: blue !important;
 			}
         </style>
-        <script src="rotodrag.js"></script>
         <script>
 			window.onload = function () {
-			
+				/*var s = Snap('100%', '100%');
+				var h = s.text(0, 200, 'H');
+				var o = s.text(0, 450, 'O');
+				var p = s.text(200, 350, 'P');
+				var e = s.text(10, 600, 'E');
+
+				function dragObj(){
+					var move = function(dx,dy) {
+					        this.attr({
+					                    transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
+					                });
+					}
+
+					var start = function() {
+					        this.data('origTransform', this.transform().local );
+					}
+
+					var stop = function() {
+					        console.log('finished dragging'); 
+					}
+
+					//h.drag(move, start, stop).addClass('square');
+					o.drag(move, start, stop).addClass('square');
+					p.drag(move, start, stop).addClass('square');
+					e.drag(move, start, stop).addClass('square');
+				}
+				dragObj();*/
 				
 				function changeColor(){
 					// Get a reference to an element
@@ -109,34 +134,73 @@
 				}
 
 				// FREE TRANSFORM
+				/*var s = Snap('100%', '100%');
+				var h = s.text(0, 200, 'H');
+				var o = s.text(0, 450, 'O');
+				var p = s.text(200, 350, 'P');
+				var e = s.text(10, 600, 'E');*/
+
+	            //var paper = Snap('#main-container');
 	            var paper = Raphael('holder');
-	            var h = paper.text(100, 200, 'H');
-	            var o = paper.text(600, 450, 'O');
-				var p = paper.text(200, 350, 'P');
-				var e = paper.text(400, 600, 'E');
+	            var h = paper.text(100, 200, 'H').transform( 'r20 20 S1 5');
+	            var o = paper.text(600, 450, 'O').transform( 'r45,100 S8 2');
+				var p = paper.text(200, 350, 'P').transform( 'r10,100 S-3 4');
+				var e = paper.text(400, 600, 'E').transform( 'r100,100 S1 -5');
 				var letters = [h, o, p, e];
 
+
+
+				/*var i;
+				for (i = 0; i < letters.length; i++) {
+					var object = letters[i];
+		            var ft = paper.freeTransform(object, { snap: { rotate: 1 }, size: 8, draw: 'bbox'  });
+		          
+		            ft.attrs.rotate = 45;
+		            ft.attrs.scale.x = 1;
+		            ft.apply();
+		            object.data('ftStatus', 1);
+			    	object.dblclick( function() {
+		                if( object.data('ftStatus' ) ) {
+		                    ft.hideHandles();
+		                    object.data('ftStatus',0);
+		                } else {
+		                    ft.showHandles();
+		                    object.data('ftStatus',1);
+		                }
+		            });
+			    }*/
 				
 				var i;
 				for (i = 0; i < letters.length; i++) {
 				    var rect = letters[i];
 
 				    // Add freeTransform
-					var ft = paper.freeTransform(rect, { snap: { rotate: 1 }, size: 8, draw: 'bbox'  });
+					var ft = paper.freeTransform(rect, { snap: { rotate: 1 }, size: 4, draw: 'bbox'  });
 
 					// Hide freeTransform handles
-					ft.hideHandles();
+					//ft.hideHandles();
 
 					// Show hidden freeTransform handles
-					ft.showHandles();
+					//ft.showHandles();
 
 					// Apply transformations programmatically
-					ft.attrs.rotate = 45;
+					//ft.attrs.rotate = 45;
 
 					ft.apply();
 
+					rect.data('ftStatus', 1);
+			    	rect.dblclick( function() {
+		                if( rect.data('ftStatus' ) ) {
+		                    ft.hideHandles();
+		                    rect.data('ftStatus',0);
+		                } else {
+		                    ft.showHandles();
+		                    rect.data('ftStatus',1);
+		                }
+		            });
+
 					// Remove freeTransform completely
-					//ft.unplug();
+					ft.unplug();
 
 					// Add freeTransform with options and callback
 					ft = paper.freeTransform(rect, { keepRatio: true }, function(ft, events) {
@@ -145,12 +209,13 @@
 
 					// Change options on the fly
 					ft.setOpts({ keepRatio: false });
+
 			}		
 		}
 
         </script>
         <head></head>
         <body>
-        
+        	<!--<div id="svg" preserveAspectRatio="xMinYMin meet"></div>-->
         	<div id="holder"></div>
         </body>
