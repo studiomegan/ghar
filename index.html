@@ -7,6 +7,8 @@
         <title>Snap</title>
         <script src="snap.svg-min.js"></script>
         <script src="hammer.js"></script>
+        <script src="https://alias.io/raphael/free_transform/raphael.js"></script>
+		<script src="https://alias.io/raphael/free_transform/raphael.free_transform/raphael.free_transform.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <style type="text/css">
         	@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
@@ -16,15 +18,24 @@
 				margin:0;
 				height: 100%;
 				width: 100%;
+				background-color: black;
 			}
         	svg {
     			display: block;
   			}
+  			#main-container, #holder {
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                height: 100%;
+            }
   			svg text {
-  				font-family: 'Open Sans', sans-serif;
-				font-weight: 900; 
-				font-size: 100px; 
-				fill: orange;
+  				font-family: 'Open Sans', sans-serif !important;
+				font-weight: 900 !important; 
+				font-size: 100px !important; 
+				fill: orange !important;
+				transform: 200% !important;
 			}
 			.color {
 				fill: blue !important;
@@ -33,109 +44,113 @@
         <script src="rotodrag.js"></script>
         <script>
 			window.onload = function () {
-				var s = Snap('100%', '100%');
-				var h = s.text(0, 200, 'H');
-				var o = s.text(0, 450, 'O');
-				var p = s.text(200, 350, 'P');
-				var e = s.text(10, 600, 'E');
-
-				var move = function(dx,dy) {
-				        this.attr({
-				                    transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
-				                });
-				}
-
-				var start = function() {
-				        this.data('origTransform', this.transform().local );
-				}
-				var stop = function() {
-				        console.log('finished dragging'); 
-				}
-
-				h.drag(move, start, stop).addClass('square');
-				o.drag(move, start, stop).addClass('square');
-				p.drag(move, start, stop).addClass('square');
-				e.drag(move, start, stop).addClass('square');
-				
-				h.attr({ id: 'stage' });
 			
 				
-			
-				// Get a reference to an element
-				var square = document.querySelectorAll('.square');;
+				function changeColor(){
+					// Get a reference to an element
+					var square = document.querySelectorAll('.square');;
 
-				// Create a manager to manager the element
+					// Create a manager to manager the element
+					var i;
+					for (i = 0; i < square.length; i++) {
+						var manager = new Hammer.Manager(square[i]);    
+
+						// Create a recognizer
+						var DoubleTap = new Hammer.Tap({
+						  event: 'doubletap',
+						  taps: 2
+						});
+
+						// Add the recognizer to the manager
+						manager.add(DoubleTap);
+
+						// Subscribe to desired event
+						manager.on('doubletap', function(e) {
+						  e.target.classList.toggle('color');
+						});
+					}
+				}
+
+				function scaleObj(){
+					var dragging = 0;
+					var handleGroup;
+
+					function addHandleFunc() {
+					        if( dragging == 0 ) {
+					                dragging = 1;
+					                var bb = this.getBBox();
+					                var handle = new Array();
+					                handle[0] = s.circle(bb.x,bb.y,10).attr({class: 'handler'});;
+					                handle[1] = s.circle(bb.x+bb.width, bb.y, 10).attr({class: 'handler'});
+					                handleGroup = s.group(this, handle[0], handle[1]);
+					                handleGroup.drag(move,start,stop);
+					        } else {
+					                dragging = 0;
+					                s.append(this);
+					                handleGroup.selectAll('handler').remove();
+					                handleGroup.remove();
+					        }
+					}
+
+					var start = function() {
+					        this.data('origTransform', this.transform().local);
+					}
+
+					var move = function(dx,dy) {
+					        var scale = 1 + dx / 50;
+					        this.attr({
+					                transform: this.data('origTransform') + (this.data('origTransform') ? "S" : "s") + scale
+					        });
+					}
+
+					var stop = function() {};
+
+					h.dblclick( addHandleFunc );
+				}
+
+				// FREE TRANSFORM
+	            var paper = Raphael('holder');
+	            var h = paper.text(100, 200, 'H');
+	            var o = paper.text(600, 450, 'O');
+				var p = paper.text(200, 350, 'P');
+				var e = paper.text(400, 600, 'E');
+				var letters = [h, o, p, e];
+
+				
 				var i;
-				for (i = 0; i < square.length; i++) {
-					var manager = new Hammer.Manager(square[i]);    
+				for (i = 0; i < letters.length; i++) {
+				    var rect = letters[i];
 
-					// Create a recognizer
-					var DoubleTap = new Hammer.Tap({
-					  event: 'doubletap',
-					  taps: 2
+				    // Add freeTransform
+					var ft = paper.freeTransform(rect, { snap: { rotate: 1 }, size: 8, draw: 'circle'  });
+
+					// Hide freeTransform handles
+					ft.hideHandles();
+
+					// Show hidden freeTransform handles
+					ft.showHandles();
+
+					// Apply transformations programmatically
+					ft.attrs.rotate = 45;
+
+					ft.apply();
+
+					// Remove freeTransform completely
+					ft.unplug();
+
+					// Add freeTransform with options and callback
+					ft = paper.freeTransform(rect, { keepRatio: true }, function(ft, events) {
+						console.log(ft.attrs);
 					});
 
-					// Add the recognizer to the manager
-					manager.add(DoubleTap);
-
-					// Subscribe to desired event
-					manager.on('doubletap', function(e) {
-					  e.target.classList.toggle('color');
-					});
-				}
-
-				document.body.addEventListener('touchmove', function(event) {
-			        event.preventDefault();
-				}, false);
-
-				var stage = document.getElementById('stage');
-				var mc = new Hammer.Manager(stage);
-
-				var rotate = new Hammer.Rotate();
-				var pinch = new Hammer.Pinch();
-				var pan = new Hammer.Pan();
-
-				mc.add([pinch, pan, rotate]);
-				mc.get('pinch').set({ enable: true })
-				mc.get('rotate').set({ enable: true })
-
-				var adjustScale = 1;
-				var currentScale = null;
-				var currentRotation = null;
-				var adjustRotation = 0;
-
-				var adjustDeltaX = 0;
-				var adjustDeltaY = 0;
-				var currentDeltaX = null;
-				var currentDeltaY = null;
-
-				mc.on("pinch pan rotate", function(e) {
-				var transforms = [];
-				// var rotation = currentRotation + Math.round(e.rotation);
-
-				currentRotation = adjustRotation + Math.round(e.rotation);
-				currentScale = adjustScale * e.scale;
-				currentDeltaX = adjustDeltaX + (e.deltaX / currentScale);
-				currentDeltaY = adjustDeltaY + (e.deltaY / currentScale);
-
-				transforms.push('scale(' + currentScale + ')');
-				transforms.push('translate(' + currentDeltaX + 'px,' + currentDeltaY + 'px)');
-				transforms.push('rotate('+currentRotation+'deg)');
-				stage.style.transform = transforms.join(' ');
-
-				})
-
-				mc.on("panend pinchend rotateend", function(e) {
-				adjustScale = currentScale;
-				adjustRotation = currentRotation;
-				adjustDeltaX = currentDeltaX;
-				adjustDeltaY = currentDeltaY;
-
-			      })
+					// Change options on the fly
+					ft.setOpts({ keepRatio: false });
+			}		
 		}
 
         </script>
         <head></head>
         <body>
-        	<div id="svg" preserveAspectRatio="xMinYMin meet"></div>
+        
+        	<div id="holder"></div>
         </body>
