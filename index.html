@@ -52,11 +52,12 @@
 				        console.log('finished dragging'); 
 				}
 
-				h.drag(move, start, stop).addClass('square').addId('square');
+				h.drag(move, start, stop).addClass('square');
 				o.drag(move, start, stop).addClass('square');
 				p.drag(move, start, stop).addClass('square');
 				e.drag(move, start, stop).addClass('square');
 				
+				h.attr({ id: 'stage' });
 			
 				
 			
