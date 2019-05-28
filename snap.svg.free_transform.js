@@ -131,26 +131,26 @@ Snap.plugin(function(Snap, Element, Paper, global, Fragment) {
             },
             opts: {
                 attrs: {
-                    fill: '#fff',
-                    stroke: '#1e609d'
+                    fill: '#ooo',
+                    stroke: ''
                 },
                 axisLineClass: 'ftaxisline',
                 bboxClass: 'ftbbox',
                 centerDiscClass: 'ftcenterdisc',
                 centerCircleClass: 'ftcentercircle', 
-                distance: 1.2,
-                discDistance: 45,
+                distance: 1,
+                discDistance: 10,
                 discClass: 'ftdisc',
                 drag: true,
                 draw: ['bbox'],
-                keepRatio: false,
+                keepRatio: true,
                 handleClass: 'fthandle',
                 range: {
                     rotate: [-180, 180],
                     scale: [-99999, 99999]
                 },
                 rotate: true,
-                scale: true,
+                scale: false,
                 snap: {
                     rotate: 0,
                     scale: 0,
@@ -854,7 +854,7 @@ Snap.plugin(function(Snap, Element, Paper, global, Fragment) {
          */
         ft.unplug = function() {
             var attrs = ft.attrs;
-console.log('unplug');
+            console.log('unplug');
             ft.hideHandles();
 
             delete subject.freeTransform;
