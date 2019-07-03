@@ -13,12 +13,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <style type="text/css">
         	@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
-
 			body, html {
-				padding:0;
-				margin:0;
+				padding: 0;
+				margin: 0;
 				height: 100%;
 				width: 100%;
+				background-color: #f8ebce;
 			}
         	svg {
     			display: block;
@@ -29,108 +29,533 @@
                 left: 0px;
                 width: 100%;
                 height: 100%;
+                z-index: 9999;
             }
   			svg text {
   				font-family: 'Open Sans', sans-serif !important;
 				font-weight: 900 !important; 
-				font-size: 100px !important; 
-				fill: blue !important;
-				transform: 200% !important;
+				
 			}
 			.color {
-				fill: blue !important;
+				background-color: blue !important;
+			}
+			div.opening {
+				width: 100%;
+				height: 100%;
+				background-color: oranje;
+				transition-duration: 0.3s;
+				position: absolute;
+				z-index: 99999;
+				display: none;	
 			}
 			button {
 				cursor: pointer;
-				z-index: 99;
+				z-index: 99999;
 				position: absolute;
 			}
 			canvas {
 				width: 100%;
 				height: 100%;
 			}
+			button.plus, button.pause {
+				position: absolute;
+				bottom: 0;
+				height: 50px;
+				width: 50px;
+				border-radius: 100%;
+				border: 3px solid #f76014;
+				left: 50%;
+				margin: 4px 4px 4px -25px;
+				display: none;
+				background-color: #f8ebce;
+			}
+			.plus:before,
+			.plus:after {
+			    content: '';
+			    position: absolute;
+			    top: 0;
+			    left: 0;
+			    right: 0;
+			    bottom: 0;
+			    background: #f76014;
+			}
+			.plus:before{
+			    width: 3px;
+			    margin: 8px auto;
+			}
+			.plus:after{
+			    margin: auto 8px;
+			    height: 3px;
+			}
+			.pause {
+				display: none;
+			}
+			#bookmarkme {
+				display: block;
+				z-index: 9999;
+				position: absolute;
+				cursor: pointer;
+			}
+			#bookmarkme img {
+				width: 40px;
+				height: auto;
+				padding: 0 15px;
+				margin-top: -3px;
+			}
+			.oranjeblock {
+				width: 50vw;
+				height: 40vw;
+				position: relative;
+				z-index: 999999;
+				top: 20vh;
+				background: orange;
+				left: 5vw;
+			}
+			#block2 {
+				top: 30vh;
+				left: 30vw;
+			}
+			div#video {
+				display: none;
+			}
+			#custom-seekbar {  
+			  cursor: pointer;
+			  height: 15px;
+			  margin-bottom: 10px;
+			  outline: 0;
+			  overflow: hidden;
+			  position: relative;
+			  width: 100%;
+			  z-index: 9999999;
+			}
+			#custom-seekbar span {
+			  background-color: #000;
+			  position: absolute;
+			  top: 4px;
+			  left: 0;
+			  height: 8px;
+			  width: 0px;
+			  border-radius: 0px 25px 25px 0;
+			}
+			video {
+				top: 0;
+				position: absolute;
+				z-index: 99;
+			}
+			#unlocked {
+				width: 100%;
+				height: 50%;
+				top: 0;
+				background-color: green;
+				display: none;
+				position: absolute;
+				z-index: 99999;
+			}
+			#unlocked .arrowUp {
+				font-family: 'Open Sans', sans-serif;
+				transform: rotate(90deg);
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				font-size: 30pt;
+				cursor: pointer;
+			}
+			.colorbounce {
+				animation: colorchange 10s;
+				 -webkit-animation: colorchange 10s;
+			}
+			@keyframes colorchange {
+				0%   {background: red;}
+				25%  {background: yellow;}
+				50%  {background: blue;}
+				75%  {background: green;}
+				100% {background: red;}
+		    }
+		    @-webkit-keyframes {
+				0%   {background: red;}
+				25%  {background: yellow;}
+				50%  {background: blue;}
+				75%  {background: green;}
+				100% {background: red;}
+    		}
         </style>
         <script>
 
 			window.onload = function () {
-				// FREE TRANSFORM
+				var size = '200px';
+				$( "svg" ).css( "font-size", size );
+				var oranje = '#f76014'
 				var paper = Snap('#main-container');
-				var h = paper.text(100, 200, 'H').transform( 'r80');
-	            var o = paper.text(600, 450, 'O').transform( 'r10');
-				var p = paper.text(200, 350, 'P').transform( 'r180');
-				var e = paper.text(400, 600, 'E').transform( 'r90');
+				var x = window.innerWidth;
+				var y = window.innerHeight;
 
-				var letters = [h, o, p, e];
+				woord1();
 
-				for (i = 0; i < letters.length; i++) {
-					var object = letters[i];
-		            var ft = paper.freeTransform(object, { snap: { rotate: 1 }, size: 5, draw: 'bbox' });
-		          
-		            //ft.attrs.rotate = 45;
-		            //ft.attrs.scale.x = 1;
+				$('#video').attr('data-lala', "woord1");
 
-					// Hide freeTransform handles
-					ft.hideHandles();
+				function woord1() {
+					// FREE TRANSFORM
+					var hx = x - ((window.innerWidth / 100) * 90);
+					var hy = y - ((window.innerHeight / 100) * 70);
+					var ax = x - ((window.innerWidth / 100) * 70);
+					var ay = y - ((window.innerHeight / 100) * 15);
+					var mx = x - ((window.innerWidth / 100) * 95);
+					var my = y - ((window.innerHeight / 100) * 5);
+					var m2x = x - ((window.innerWidth / 100) * 60);
+					var m2y = y - ((window.innerHeight / 100) * 8);
+					var a2x = x - ((window.innerWidth / 100) * 60);
+					var a2y = y - ((window.innerHeight / 100) * 30);
+					var m3x = x - ((window.innerHeight / 100) * 40);
+					var m3y = y - ((window.innerHeight / 100) * 20);
+					var h = paper.text(hx, hy, 'H').transform( 'r80').attr({id: "h"});
+		            var a = paper.text(ax, ay, 'A').transform( 'r10').addClass('lala');
+					var m = paper.text(mx, my, 'M').transform( 'r180');
+					var m2 = paper.text(m2x, m2y, 'M').transform( 'r5');
+					var a2 = paper.text(a2x, a2y, 'A').transform( 'r180');
+					var m3 = paper.text(m3x, m3y, 'M').transform( 'r90');
+					var letters = [];
+					letters.push(h, a, m, m2, a2, m3);
 
-					// Show hidden freeTransform handles
-					ft.showHandles();
+					for (i = 0; i < letters.length; i++) {
+						var object = letters[i];
+			            var ft = paper.freeTransform(object, { snap: { rotate: 1 }, size: 5, draw: 'bbox' });
+			            ft.apply();
+			            ft.showHandles();
+						$(".plus").click(function(){
+							ft.hideHandles() // FIXEN HIDE ALLEEN DE LAATSTE LETTER
+						});
+			        }
 
-		            ft.apply();
-		            }
+	            	object.data('ftStatus', 1);
+	            	
+		            for (i = 0; i < letters.length; i++) {
+		            	/* BOUNCE EN DROP FIXEN
+		            	letters[0].animate({transform: 500}, 2000, mina.bounce, function(){
+					        //---finished--
+					        updatethem();
+					    ;})*/
+			            letters[i].mouseover(function() {
+						    this.animate({fill: oranje}, 600);
+						    $('.plus').fadeIn(100);
+						}).mouseout(function() {
+						    this.animate({
+						        fill: oranje
+						    }, 200);
+						}); 
 
-		            object.data('ftStatus', 1);
+					}
+	       		}; // woord1 
 
+				function woord2() {
+					//var paper = Snap('#main-container');
+					var sx = x - ((window.innerWidth / 100) * 90);
+					var sy = y - ((window.innerHeight / 100) * 20);
+					var px = x - ((window.innerWidth / 100) * 70);
+					var py = y - ((window.innerHeight / 100) * 15);
+					var rx = x - ((window.innerWidth / 100) * 95);
+					var ry = y - ((window.innerHeight / 100) * 5);
+					var ex = x - ((window.innerWidth / 100) * 70);
+					var ey = y - ((window.innerHeight / 100) * 3);
+					var ax = x - ((window.innerWidth / 100) * 70);
+					var ay = y - ((window.innerHeight / 100) * 3);
+					var dx = x - ((window.innerWidth / 100) * 70);
+					var dy = y - ((window.innerHeight / 100) * 3);
+					var s = paper.text(sx, sy, 'S').transform( 'r15');
+					var p = paper.text(px, py, 'P').transform( 'r180');
+					var r = paper.text(rx, ry, 'R').transform( 'r15');
+					var e = paper.text(ex, ey, 'E').transform( 'r90');
+					var aa = paper.text(ax, ay, 'A').transform( 'r15');
+					var d = paper.text(dx, dy, 'D').transform( 'r15');
+					var letters = [];
+					letters.push(s, p, r, e, aa, d);
+					for (i = 0; i < letters.length; i++) {
+						var object = letters[i];
+			            var ft = paper.freeTransform(object, { snap: { rotate: 1 }, size: 5, draw: 'bbox' });
+			            ft.apply();
+			        }
+		  
+	            	object.data('ftStatus', 2);
+	      	
+		            for (i = 0; i < letters.length; i++) {
+			            var color = letters[i];
+			            color.mouseover(function() {
+						    this.animate({
+						        fill: oranje
+						    }, 600);
+						    $('.plus').fadeIn(10000);
+						}).mouseout(function() {
+						    this.animate({
+						        fill: oranje
+						    }, 200);
+						}); 
+					}
+				}; // woord2
+				
+				function woord3() {
+					var paper = Snap('#main-container');
+					var letters = [];
+					var sx = x - ((window.innerWidth / 100) * 90);
+					var sy = y - ((window.innerHeight / 100) * 20);
+					var tx = x - ((window.innerWidth / 100) * 70);
+					var ty = y - ((window.innerHeight / 100) * 15);
+					var ax = x - ((window.innerWidth / 100) * 95);
+					var ay = y - ((window.innerHeight / 100) * 5);
+					var mx = x - ((window.innerWidth / 100) * 70);
+					var my = y - ((window.innerHeight / 100) * 3);
+					var px = x - ((window.innerWidth / 100) * 70);
+					var py = y - ((window.innerHeight / 100) * 3);
+					var s = paper.text(sx, sy, 'S').transform( 'r15');
+					var t = paper.text(tx, ty, 'T').transform( 'r180');
+					var aa = paper.text(aax, aay, 'A').transform( 'r15');
+					var m = paper.text(mx, my, 'M').transform( 'r90');
+					var p = paper.text(px, py, 'P').transform( 'r15');
+					letters.push(s, t, aa, m, p);
+					for (i = 0; i < letters.length; i++) {
+						var object = letters[i];
+			            var ft = paper.freeTransform(object, { snap: { rotate: 1 }, size: 5, draw: 'bbox' });
+			            ft.apply();
+			        }
+		  
+	            	object.data('ftStatus', 3);
+	      	
+		            for (i = 0; i < letters.length; i++) {
+			            var color = letters[i];
+			            color.mouseover(function() {
+						    this.animate({
+						        fill: oranje
+						    }, 600);
+						    $('.plus').fadeIn(10000);
+						}).mouseout(function() {
+						    this.animate({
+						        fill: oranje
+						    }, 200);
+						}); 
+					}
+				}; // woord3
 			}
 
+				
 			
 
         </script>
         <head></head>
         <body>
-        	<button>svg to png</button>
+
+			<div class="dropdown">
+	        	<button id="hamburgerbutton" class="hamburger hamburger--collapse" type="button">
+					<span class="hamburger-box">
+						<span class="hamburger-inner"></span>
+					</span>
+				</button>
+				<div id="myDropdown" class="dropdown-content">
+					<a id="bookmarkme" href="#" rel="sidebar" title="bookmark this page"><img src="https://img.icons8.com/material-sharp/24/000000/bookmark-ribbon/96"></a>
+					<div id="block1" class="oranjeblock"></div>
+					<div id="block2" class="oranjeblock"></div>
+				</div><!-- dropdown-content -->
+			</div><!-- dropdown -->
+
+			<div class="opening"></div>
+
+			<div id="unlocked">YOU'VE UNLOCKED CONTENT<span class="arrowUp">&#62;</span></div>
+
         	<svg id="main-container"></svg>
-        	<canvas id="canvas"></canvas>
-        	<script type="text/javascript">//Download as image
-			var btn = document.querySelector('button');
-			var svg = document.querySelector('svg');
-			var canvas = document.querySelector('canvas');
 
-			function triggerDownload (imgURI) {
-			  var evt = new MouseEvent('click', {
-			    view: window,
-			    bubbles: false,
-			    cancelable: true
+        	<div id="video">
+				<div id="custom-seekbar">
+					<span></span>
+				</div>
+
+				<video id="video1" width="100%">
+	    			<source src="../filmpjes/1.Bathroom-19-juni.mp4" type="video/mp4">
+				</video>
+				<video id="video2" width="100%">
+	    			<source src="../filmpjes/1.Factory-19-juni.mp4" type="video/mp4">
+				</video>
+				<video id="video3" width="100%">
+	    			<source src="../filmpjes/1.Hamam-19-juni.mp4" type="video/mp4">
+				</video>
+			</div>
+        	<button class="plus" type="button"></button>
+        	<button id="pauseplay_btn" class="pause" type="button">Pause</button>
+        	<button id="pauseplay_btn2" class="pause" type="button">Pause</button>
+        	<button id="pauseplay_btn3" class="pause" type="button">Pause</button>
+			
+			<script>
+			/**
+			* forEach implementation for Objects/NodeLists/Arrays, automatic type loops and context options
+			*
+			* @private
+			* @author Todd Motto
+			* @link https://github.com/toddmotto/foreach
+			* @param {Array|Object|NodeList} collection - Collection of items to iterate, could be an Array, Object or NodeList
+			* @callback requestCallback      callback   - Callback function for each iteration.
+			* @param {Array|Object|NodeList} scope=null - Object/NodeList/Array that forEach is iterating over, to use as the this value when executing callback.
+			* @returns {}
+			*/
+
+			var forEach=function(t,o,r){if("[object Object]"===Object.prototype.toString.call(t))for(var c in t)Object.prototype.hasOwnProperty.call(t,c)&&o.call(r,t[c],c,t);else for(var e=0,l=t.length;l>e;e++)o.call(r,t[e],e,t)};
+			var hamburgers = document.querySelectorAll(".hamburger");
+			if (hamburgers.length > 0) {
+			  forEach(hamburgers, function(hamburger) {
+			    hamburger.addEventListener("click", function buttonnn() {
+			      this.classList.toggle("is-active");
+			    }, false);
 			  });
+			}
+			
+			//CUSTOM VIDEO TIMER BAR
+			var vid = document.getElementById("video1");
+			vid.ontimeupdate = function(){
+			  var percentage = ( vid.currentTime / vid.duration ) * 100;
+			  $("#custom-seekbar span").css("width", percentage+"%");
+			};
+			$("#custom-seekbar").on("click", function(e){
+			    var offset = $(this).offset();
+			    var left = (e.pageX - offset.left);
+			    var totalWidth = $("#custom-seekbar").width();
+			    var percentage = ( left / totalWidth );
+			    var vidTime = vid.duration * percentage;
+			    vid.currentTime = vidTime;
+			});//click()
 
-			  var a = document.createElement('a');
-			  a.setAttribute('download', 'MY_COOL_IMAGE.png');
-			  a.setAttribute('href', imgURI);
-			  a.setAttribute('target', '_blank');
+			//add to favorites
+			$(function () {
+			  $('#bookmarkme').click(function() {
+			    if (window.sidebar && window.sidebar.addPanel) { // Mozilla Firefox Bookmark
+			      window.sidebar.addPanel(document.title, window.location.href, '');
+			    } else if (window.external && ('AddFavorite' in window.external)) { // IE Favorite
+			      window.external.AddFavorite(location.href, document.title);
+			    } else if (window.opera && window.print) { // Opera Hotlist
+			      this.title = document.title;
+			      return true;
+			    } else { // webkit - safari/chrome
+			      alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Command/Cmd' : 'CTRL') + ' + D to bookmark this page.');
+			    }
+			  });
+			});
 
-			  a.dispatchEvent(evt);
+			//PAUSE PLAY BUTTON
+			var ppbutton = document.getElementById("pauseplay_btn");
+			ppbutton.addEventListener("click", playPause);
+			myVideo = document.getElementById("video1");
+			function playPause() { 
+			    if (myVideo.paused) {
+			        myVideo.play();
+			        ppbutton.innerHTML = "Pause";
+			    } else  {
+			        myVideo.pause(); 
+			        ppbutton.innerHTML = "Play";
+			    }
+			}
+			var ppbutton2 = document.getElementById("pauseplay_btn2");
+			ppbutton2.addEventListener("click", playPause2);
+			myVideo2 = document.getElementById("video2");
+			function playPause2() { 
+			    if (myVideo2.paused) {
+			        myVideo2.play();
+			        ppbutton2.innerHTML = "Pause";
+			    } else  {
+			        myVideo2.pause(); 
+			        ppbutton2.innerHTML = "Play";
+			    }
+			}
+			var ppbutton3 = document.getElementById("pauseplay_btn3");
+			ppbutton3.addEventListener("click", playPause3);
+			myVideo3 = document.getElementById("video3");
+			function playPause3() { 
+			    if (myVideo3.paused) {
+			        myVideo3.play();
+			        ppbutton3.innerHTML = "Pause";
+			    } else  {
+			        myVideo3.pause(); 
+			        ppbutton3.innerHTML = "Play";
+			    }
 			}
 
-			btn.addEventListener('click', function () {
-			  var canvas = document.getElementById('canvas');
-			  var ctx = canvas.getContext('2d');
-			  var data = (new XMLSerializer()).serializeToString(svg);
-			  var DOMURL = window.URL || window.webkitURL || window;
+			$(".opening").click(function() {
+			    $(".opening").fadeOut("normal", function() {
+			        $(this).remove();
+			    });
+			});
 
-			  var img = new Image();
-			  var svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-			  var url = DOMURL.createObjectURL(svgBlob);
+			$(".arrowUp").click(function(){
+				$("#unlocked").fadeOut();
+				$("#hamburgerbutton").classList.add("is-active");
+			});
 
-			  img.onload = function () {
-			    ctx.drawImage(img, 0, 0);
-			    DOMURL.revokeObjectURL(url);
+			////////////////////////////////////////////////////
+	    	jQuery(".hamburger").click(function(){
+	        	jQuery(".dropdown-content").slideToggle('slow');
+	    	});
 
-			    var imgURI = canvas
-			        .toDataURL('image/png')
-			        .replace('image/png', 'image/octet-stream');
+			var video1 = document.getElementById("video1");
+			var video2 = document.getElementById("video2");
+			var video3 = document.getElementById("video3");
+			var videos;
+			
+			videos = video1;
+			
+			video1.onended = function() {					
+				$('#video').fadeOut(1000);
+				$('#main-container').fadeIn(100);
+				paper.clear();
+				woord2();
+				videos = video2;
+				$('#pauseplay_btn').hide();
+				$('#bookmarkme').show();
+				$('#custom-seekbar').hide();
+				$('#video').attr('data-lala', "woord2");
+				$('#block1').css('background', '#aaa');
+				$('#unlocked').fadeIn('slow');
+				$(".hamburger-inner").classList.add("colorbounce");
+			};
+			
+			video2.onended = function() {
+				$('#video').fadeOut(1000);
+				$('#main-container').fadeIn(100);
+				paper.clear();
+				woord3();
+				videos = video3;
+				$('#pauseplay_btn').hide();
+				$('#bookmarkme').show();
+				$('#video').attr('data-lala', "woord3");
+			};
 
-			    triggerDownload(imgURI);
-			  };
+			video3.onended = function() {
+				$('#video').fadeOut(1000);
+				$('#main-container').fadeIn(100);
+				paper.clear();
+				$('#pauseplay_btn').hide();
+				$('#bookmarkme').show();
+				$('#video').attr('data-lala', "colofon");
+			};
 
-			  img.src = url;
-			});</script>
+			$("button.plus").click(function() {
+				$('#main-container').fadeOut(9000);
+				$('#video').fadeIn(100);
+				if ($('#video').attr('data-lala') === 'woord1' ) {
+					$(video1).show();
+					$(video2).hide();
+					$(video3).hide();
+					$('#pauseplay_btn').show();
+					$('#bookmarkme').hide();
+				} 
+				else if ($('#video').attr('data-lala') === 'woord2' ) {
+					$(video1).hide();
+					$(video2).show();
+					$(video3).hide();
+					$('#pauseplay_btn2').show();
+					$('#bookmarkme').hide();
+				}
+				else if ($('#video').attr('data-lala') === 'woord3' ) {
+					$(video1).hide();
+					$(video2).hide();
+					$(video3).show();
+					$('#pauseplay_btn3').show();
+					$('#bookmarkme').hide();
+				} 
+				videos.play()
+				$("button.plus").fadeOut(1000);
+			});	
+			</script>
         </body>
