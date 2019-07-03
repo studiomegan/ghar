@@ -30,15 +30,15 @@ Snap.plugin(function(Snap, Element, Paper, global, Fragment) {
     // Get a new x,y for the cursor, then subtract from the original point accounting also for its matrix
     // Hmm I feel like this could be simplified! Check through globalToLocal and see if some is redundant
     // Superceded, but leaving in case of use 
-//    Element.prototype.getTransformedDx = function( el, ox, oy, x, y ) {
-//        var cursorPoint = this.getCursorPoint( x, y );
-//        var pt = this.paper.node.createSVGPoint();
-//        pt.x = cursorPoint.x - ox;
-//        pt.y = cursorPoint.y - oy;
-//        var matrix = el.node.getScreenCTM().inverse();
-//        matrix.e = matrix.f = 0;      // remove the transform part. I can't quite remember now the logic of this anymore! see S.O
-//        return pt.matrixTransform( matrix );
-//    }
+    //    Element.prototype.getTransformedDx = function( el, ox, oy, x, y ) {
+    //        var cursorPoint = this.getCursorPoint( x, y );
+    //        var pt = this.paper.node.createSVGPoint();
+    //        pt.x = cursorPoint.x - ox;
+    //        pt.y = cursorPoint.y - oy;
+    //        var matrix = el.node.getScreenCTM().inverse();
+    //        matrix.e = matrix.f = 0;      // remove the transform part. I can't quite remember now the logic of this anymore! see S.O
+    //        return pt.matrixTransform( matrix );
+    //    }
 
     // otx, oty are already transformed to the correct coord space, x,y aren't, may want to change to be consistent
     Element.prototype.getTransformedDrag = function( ft, otx, oty, x, y ) {
@@ -280,7 +280,7 @@ Snap.plugin(function(Snap, Element, Paper, global, Fragment) {
          */
         ft.showHandles = function() {
             ft.hideHandles();
-//test!!
+            //test!!
             ft.group = paper.g().transform( ft.origGlobalMatrix );
 
             ft.axes.map(function(axis) {
@@ -318,7 +318,7 @@ Snap.plugin(function(Snap, Element, Paper, global, Fragment) {
                         fill: 'none',
                         opacity: .5
                     })
-                    .addClass( ft.opts.bboxClass );
+                    .addClass( ft.opts.bboxClass ); 
 
                 ft.handles.bbox = [];
 
@@ -762,9 +762,10 @@ Snap.plugin(function(Snap, Element, Paper, global, Fragment) {
             if (ft.opts.rotate.indexOf('axisX') >= 0 || ft.opts.scale.indexOf('axisX') >= 0) {
                 ft.axes.push('x');
             }
-            if (ft.opts.rotate.indexOf('axisY') >= 0 || ft.opts.scale.indexOf('axisY') >= 0) {
-                ft.axes.push('y');
-            }
+            // y circle:
+            //if (ft.opts.rotate.indexOf('axisY') >= 0 || ft.opts.scale.indexOf('axisY') >= 0) {
+                //ft.axes.push('y');
+            //}
 
 
             ['drag', 'rotate', 'scale'].map(function (option) {
